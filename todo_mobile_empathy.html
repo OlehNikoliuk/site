@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do Mobile — Empathy Student</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #A8E8FD 0%, #8DCBCD 100%);
+      font-family: 'Inter', 'Manrope', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .mobile-frame {
+      width: 100vw;
+      max-width: 430px;
+      height: 100vh;
+      margin: 0 auto;
+      position: relative;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0 1vw;
+    }
+    .support-card {
+      width: 88vw;
+      max-width: 370px;
+      background: #eafaf4;
+      border-radius: 24px;
+      margin: 28px 0 22px 0;
+      padding: 18px 17px 12px 17px;
+      color: #1495A4;
+      font-size: 1.13em;
+      box-shadow: 0 2px 18px rgba(30, 100, 180, 0.09);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .support-card span {
+      font-size: 1.45em;
+    }
+    .todo-list {
+      width: 94vw;
+      max-width: 396px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .todo-task {
+      background: rgba(255,255,255,0.92);
+      border-radius: 20px;
+      box-shadow: 0 3px 10px rgba(30,180,180,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 17px 15px 13px 12px;
+      gap: 10px;
+      transition: box-shadow 0.2s;
+      animation: appear 0.4s;
+    }
+    .todo-task.done {
+      opacity: 0.54;
+      filter: grayscale(0.30);
+      box-shadow: none;
+    }
+    .checkmark {
+      min-width: 32px;
+      min-height: 32px;
+      border-radius: 50%;
+      background: #b4ede7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid #7ED6CB;
+      transition: border 0.2s, background 0.2s;
+    }
+    .checkmark.active {
+      background: #31A6F7;
+      border: 2px solid #31A6F7;
+      color: #fff;
+    }
+    .task-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .task-title {
+      font-size: 1.04em;
+      font-weight: 600;
+      color: #24505A;
+    }
+    .task-sub {
+      font-size: 0.97em;
+      color: #8DCBCD;
+      letter-spacing: 0.01em;
+    }
+    .priority {
+      margin-left: 10px;
+      font-size: 1.18em;
+    }
+    .priority.high { color: #FDB833; }
+    .priority.medium { color: #A0FFDB; }
+    .priority.low { color: #70B7F4; }
+    .progress-wrapper {
+      width: 92vw;
+      max-width: 372px;
+      margin: 19px auto 7px auto;
+      text-align: center;
+    }
+    .progress-bar {
+      position: relative;
+      height: 10px;
+      border-radius: 7px;
+      background: #eafaf4;
+      margin-bottom: 10px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg,#31A6F7 0%,#A8E8FD 100%);
+      border-radius: 7px;
+      width: 25%;
+      transition: width 0.25s;
+    }
+    .progress-value {
+      font-size: 0.97em;
+      color: #1495A4;
+      margin-bottom: 2px;
+    }
+    .add-btn {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #A8E8FD 70%, #31A6F7 100%);
+      color: #24505A;
+      font-size: 1.07em;
+      font-weight: 600;
+      border: none;
+      border-radius: 25px;
+      padding: 15px 38px;
+      cursor: pointer;
+      box-shadow: 0 3px 14px rgba(70,200,220,0.12);
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      transition: filter 0.11s;
+      z-index: 40;
+    }
+    .add-btn:hover {
+      filter: brightness(1.07);
+    }
+    @keyframes appear { from{transform:translateY(20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+    @media (max-width: 520px) {
+      .mobile-frame { width: 100vw; max-width: none; }
+      .todo-list { max-width: 98vw;}
+      .support-card { max-width: 98vw; }
+      .progress-wrapper { max-width: 98vw;}
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-frame">
+    <div class="support-card"><span>🧡</span>Ти справишся! Все під контролем, breathe…</div>
+    <div class="todo-list">
+      <div class="todo-task">
+        <div class="checkmark"></div>
+        <div class="task-info">
+          <div class="task-title">Підготуватися до тесту з математики</div>
+          <div class="task-sub">Почни з одного прикладу, далі буде простіше</div>
+        </div>
+        <span class="priority high" title="Важливо">🔥</span>
+      </div>
+      <div class="todo-task done">
+        <div class="checkmark active">✓</div>
+        <div class="task-info">
+          <div class="task-title">Зробити нотатки по лекції</div>
+          <div class="task-sub">Відмічай важливе, решта – потім</div>
+        </div>
+        <span class="priority medium" title="Середній пріоритет">😊</span>
+      </div>
+      <div class="todo-task">
+        <div class="checkmark"></div>
+        <div class="task-info">
+          <div class="task-title">Відправити листа куратору</div>
+          <div class="task-sub">Текст можна підготувати за 5 хв</div>
+        </div>
+        <span class="priority low" title="Можна потім">🌱</span>
+      </div>
+      <div class="todo-task">
+        <div class="checkmark"></div>
+        <div class="task-info">
+          <div class="task-title">Піти на прогулянку 10 хв</div>
+          <div class="task-sub">Короткий відпочинок допомагає зняти напругу</div>
+        </div>
+        <span class="priority medium" title="Середній пріоритет">😊</span>
+      </div>
+    </div>
+    <div class="progress-wrapper">
+      <div class="progress-bar"><div class="progress-bar-fill" style="width: 25%"></div></div>
+      <div class="progress-value">Виконано: 1 із 4</div>
+    </div>
+    <button class="add-btn"><span>+</span>Додати задачу</button>
+  </div>
+</body>
+</html>
