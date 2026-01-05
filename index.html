@@ -19,7 +19,7 @@
         body { font-family: sans-serif; background-color: #0f172a; color: white; -webkit-tap-highlight-color: transparent; }
         .input-hidden { background: transparent; border: none; outline: none; text-align: center; width: 100%; }
         
-        /* Цей стиль робить календар клікабельним по всій площі, але тепер ми це контролюємо */
+        /* Стиль календаря */
         input[type="date"]::-webkit-calendar-picker-indicator {
             background: transparent; bottom: 0; color: transparent; cursor: pointer;
             height: auto; left: 0; position: absolute; right: 0; top: 0; width: auto;
@@ -85,14 +85,12 @@
 
         const generateId = () => Math.random().toString(36).substring(2, 15);
 
-        // Функція розрахунку плану
         const calculateCustomPlan = (startReps, endReps, setsCount) => {
             let plan = {};
             let current = Math.max(1, parseInt(startReps) || 0);
             let target = Math.max(current + 1, parseInt(endReps) || 0);
             let sets = Math.max(1, parseInt(setsCount) || 5);
             let week = 1;
-            
             while (current < target && week < 200) {
                 let increase = Math.max(1, Math.ceil(current * 0.1));
                 let weeklySet = Array(sets).fill(current);
@@ -127,12 +125,7 @@
             const planStartDateRef = React.useRef(TODAY_ISO);
             
             const [showSettings, setShowSettings] = React.useState(false);
-            const [planSettings, setPlanSettings] = React.useState({ 
-                start: 10, 
-                end: 50, 
-                sets: 5,
-                startDate: TODAY_ISO
-            });
+            const [planSettings, setPlanSettings] = React.useState({ start: 10, end: 50, sets: 5, startDate: TODAY_ISO });
             const [planPreview, setPlanPreview] = React.useState(null);
 
             React.useEffect(() => { activePlanRef.current = activePlan; }, [activePlan]);
@@ -148,7 +141,6 @@
                     if (user) setLoading(false);
                     return;
                 }
-                
                 const safetyTimer = setTimeout(() => setLoading(false), 3000);
                 setLoading(true);
 
@@ -159,18 +151,15 @@
                     if (doc.exists) {
                         const data = doc.data();
                         setIdOwnerData(data);
-                        
                         if (data.customPlan && JSON.stringify(data.customPlan) !== JSON.stringify(activePlanRef.current)) {
                             setActivePlan(data.customPlan);
                         } else if (!data.customPlan) {
                             setActivePlan(DEFAULT_PLAN);
                         }
-
                         const loadedStartDate = data.planSettings?.startDate || TODAY_ISO;
                         if (loadedStartDate !== planStartDateRef.current) {
                             setPlanStartDate(loadedStartDate);
                         }
-
                         const authUsers = data.authorized_users || [data.owner];
                         const isOwner = authUsers.includes(user.uid);
                         setIsGlobalOwner(isOwner);
@@ -189,12 +178,10 @@
                 const unsubData = dataRef.onSnapshot(doc => {
                     clearTimeout(safetyTimer);
                     setLoading(false);
-                    
                     if (doc.exists) {
                         const data = doc.data();
                         setWorkoutData(data);
                         if (isGlobalOwner && viewMode === 'edit') setSaveStatus('saved');
-                        
                         if (data.exercise?.sets?.every(s => s.done) && !justFinished && isGlobalOwner) {
                             triggerConfetti();
                             setJustFinished(true);
@@ -220,7 +207,6 @@
                         }
                     }
                 });
-
                 return () => { unsubOwner(); unsubData(); clearTimeout(safetyTimer); };
             }, [user, currentDate, sessionId, isGlobalOwner, viewMode]);
 
@@ -229,14 +215,11 @@
                     const start = new Date(planStartDateRef.current);
                     const current = new Date(dateString);
                     const diffDays = Math.floor((current - start) / (1000 * 60 * 60 * 24));
-                    
                     if (diffDays < 0) return '';
-                    
                     const weekNum = Math.floor(diffDays / 7) + 1;
                     const plan = activePlanRef.current;
                     const maxWeek = Math.max(...Object.keys(plan).map(Number));
                     const weekPlan = plan[Math.min(weekNum, maxWeek)] || plan[maxWeek];
-                    
                     return weekPlan[setIdx] !== undefined ? weekPlan[setIdx].toString() : (weekPlan[0] || '').toString();
                 } catch (e) { return ''; }
             };
@@ -316,25 +299,16 @@
             const saveCustomPlan = async () => {
                 if (!planPreview || !isGlobalOwner) return;
                 if (!confirm("Це оновить ваш план. Якщо сьогоднішній день ще не завершено, він буде перерахований. Продовжити?")) return;
-                
                 try {
                     const ownerRef = db.collection('artifacts').doc(APP_ID).collection('public').doc('data').collection('pushups_owners').doc(sessionId);
-                    await ownerRef.update({ 
-                        customPlan: planPreview.generatedPlan, 
-                        planSettings: planSettings 
-                    });
-
+                    await ownerRef.update({ customPlan: planPreview.generatedPlan, planSettings: planSettings });
                     if (currentDate >= planSettings.startDate) {
                         const dataRef = db.collection('artifacts').doc(APP_ID).collection('public').doc('data').collection('pushups_logs').doc(`${sessionId}_${currentDate}`);
                         await dataRef.delete(); 
                     }
-
                     setShowSettings(false);
                     setWorkoutData(null); 
-                } catch (e) { 
-                    alert("Помилка збереження"); 
-                    console.error(e);
-                }
+                } catch (e) { alert("Помилка збереження"); console.error(e); }
             };
 
             const copyId = () => {
@@ -342,6 +316,7 @@
                 alert("ID скопійовано!");
             };
 
+            // 🔥 ЛОГІКА ПАРОЛІВ (ПОВЕРНУТО)
             const handleSetPassword = async () => {
                 if (!idOwnerData || !isGlobalOwner) return;
                 const newPass = prompt("Встановіть пароль (пусто, щоб видалити):");
@@ -388,7 +363,6 @@
                                 <button onClick={() => setShowSettings(false)}>✕</button>
                             </div>
                             <div className="space-y-3">
-                                {/* 🔥 ДОДАНО relative, щоб зона календаря не вилазила за межі */}
                                 <div><label className="text-[10px] uppercase text-slate-400">Дата старту</label><input type="date" value={planSettings.startDate} onChange={e => setPlanSettings({...planSettings, startDate: e.target.value})} className="w-full relative bg-slate-900 border border-slate-600 rounded p-2 text-white"/></div>
                                 <div><label className="text-[10px] uppercase text-slate-400">Старт (кількість)</label><input type="number" value={planSettings.start} onChange={e => setPlanSettings({...planSettings, start: e.target.value})} className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white"/></div>
                                 <div><label className="text-[10px] uppercase text-slate-400">Ціль (кількість)</label><input type="number" value={planSettings.end} onChange={e => setPlanSettings({...planSettings, end: e.target.value})} className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white"/></div>
@@ -406,6 +380,7 @@
             const currentWeekCalc = Math.floor((new Date(currentDate) - new Date(planStartDateRef.current)) / (1000 * 60 * 60 * 24 * 7)) + 1;
             const displayWeek = currentWeekCalc > 0 ? currentWeekCalc : '-';
             const tip = WEEKLY_TIPS[Math.max(1, Math.min(currentWeekCalc, 15))] || "Ти можеш все!";
+            const hasPassword = idOwnerData && !!idOwnerData.password;
             
             if (!workoutData && viewMode === 'read') {
                 return (
@@ -430,7 +405,16 @@
                             <div className="flex justify-between items-center">
                                 <h1 className="text-lg font-black italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200">🏆 PUSH-UP 15</h1>
                                 <div className="flex gap-2 items-center">
-                                    {isGlobalOwner && <button onClick={() => setShowSettings(true)} className="p-2 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:border-white transition-all">⚙️</button>}
+                                    {/* 🔥 КНОПКИ ПАРОЛЮ ПОВЕРНУТО */}
+                                    {isGlobalOwner && (
+                                        <button onClick={() => setShowSettings(true)} className="p-2 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:border-white transition-all">⚙️</button>
+                                    )}
+                                    {isGlobalOwner ? (
+                                        <button onClick={handleSetPassword} className={`p-2 rounded-full border transition-all ${hasPassword ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : 'text-slate-500 border-slate-700 hover:text-white'}`}>{hasPassword ? '🔐' : '🔓'}</button>
+                                    ) : (
+                                        hasPassword && <button onClick={handleUnlock} className="bg-blue-600/20 text-blue-400 border border-blue-500/50 px-3 py-1 rounded-full text-[10px] font-bold animate-pulse whitespace-nowrap">🔑</button>
+                                    )}
+                                    
                                     <button onClick={logout} className={`bg-slate-700/50 px-3 py-1 rounded-full text-[10px] border border-slate-600 flex flex-col items-end min-w-[80px]`}>
                                         <span className="font-bold">{sessionId}</span>
                                         <span className={statusColor}>{statusText}</span>
@@ -450,6 +434,14 @@
                     </header>
 
                     <main className="max-w-md mx-auto p-4 space-y-5">
+                        {/* 🔥 ПОПЕРЕДЖЕННЯ ДЛЯ ГОСТЕЙ ПОВЕРНУТО */}
+                        {!isGlobalOwner && (
+                             <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-xl text-center mb-2 animate-in fade-in zoom-in">
+                                <p className="text-xs text-red-200 font-bold mb-2">🔒 Цей ID належить іншому.</p>
+                                {hasPassword && <button onClick={handleUnlock} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold w-full transition-colors">Ввести пароль</button>}
+                            </div>
+                        )}
+
                         <div className="bg-slate-800 rounded-3xl overflow-hidden border border-slate-700 shadow-xl relative">
                             <div className="h-1 w-full bg-slate-700">
                                 <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500" style={{width: `${progressPercent}%`}}></div>
