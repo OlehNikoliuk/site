@@ -3,22 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>З Днем Народження!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>З Днем Народження, Тато!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Color Palette */
             --bg-color: #0f172a;
-            --surface: rgba(30, 41, 59, 0.7);
-            --surface-border: rgba(255, 255, 255, 0.1);
+            --surface: rgba(30, 41, 59, 0.75);
+            --surface-hover: rgba(51, 65, 85, 0.85);
+            --surface-border: rgba(255, 255, 255, 0.08);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.5);
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.4);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.4);
+            --warning: #f59e0b;
+            
+            /* Geometry */
+            --radius-xl: 32px;
             --radius-lg: 24px;
             --radius-md: 16px;
             --nav-height: 80px;
         }
 
+        /* --- RESET & BASE --- */
         * {
             margin: 0;
             padding: 0;
@@ -34,9 +45,11 @@
             display: flex;
             justify-content: center;
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.1), transparent 25%);
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.12), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 30%);
             background-attachment: fixed;
+            overflow-x: hidden;
+            overscroll-behavior-y: none; /* Запобігає pull-to-refresh на мобільних */
         }
 
         .app-container {
@@ -46,15 +59,15 @@
             padding: 24px 20px calc(var(--nav-height) + 40px);
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 28px;
         }
 
-        /* Header Section */
+        /* --- HEADER --- */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 4px;
+            z-index: 10;
         }
 
         .profile-group {
@@ -67,9 +80,10 @@
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #2563eb);
+            background: linear-gradient(135deg, var(--accent), #60a5fa);
             padding: 2px;
-            box-shadow: 0 0 20px var(--accent-glow);
+            box-shadow: 0 8px 24px var(--accent-glow);
+            position: relative;
         }
 
         .avatar-inner {
@@ -84,34 +98,58 @@
         }
 
         .user-info h1 {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             letter-spacing: -0.5px;
+            margin-bottom: 4px;
         }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            padding: 4px 10px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            margin-top: 4px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            backdrop-filter: blur(4px);
         }
 
         .status-dot {
             width: 6px;
             height: 6px;
-            background-color: #10b981;
+            background-color: var(--success);
             border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse-dot 2s infinite;
         }
 
-        /* Bento Grid */
+        @keyframes pulse-dot {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* --- TABS SYSTEM --- */
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tab-content.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- BENTO GRID --- */
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -120,81 +158,79 @@
 
         .bento-card {
             background: var(--surface);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--surface-border);
             border-radius: var(--radius-lg);
-            padding: 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
         }
 
-        .span-2 {
-            grid-column: span 2;
-        }
+        .span-2 { grid-column: span 2; }
 
         /* Card: Main Message */
         .message-card h2 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            background: linear-gradient(to right, #fff, #94a3b8);
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            line-height: 1.2;
         }
 
         .message-card p {
             font-size: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
             color: var(--text-secondary);
+            font-weight: 400;
         }
 
-        /* Card: Distance/Location */
+        /* Card: Distance */
         .location-card {
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 24px 16px;
+            padding: 32px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.5;
         }
         
+        .location-card svg {
+            filter: drop-shadow(0 4px 12px var(--accent-glow));
+            margin-bottom: 8px;
+        }
+
         .location-card h3 {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 12px 0 4px;
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin: 4px 0;
+            color: var(--text-primary);
         }
 
         .location-card p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
-            text-transform: uppercase;
+            font-weight: 700;
             letter-spacing: 1px;
-            font-weight: 600;
         }
 
-        /* Photo Gallery Section */
-        .section-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-top: 16px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        /* --- GALLERY GRID --- */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-        }
-
-        .gallery-grid .photo-item:nth-child(1),
-        .gallery-grid .photo-item:nth-child(13) {
-            grid-column: span 2;
-            aspect-ratio: 16 / 9;
         }
 
         .photo-item {
@@ -202,58 +238,187 @@
             aspect-ratio: 1 / 1;
             border-radius: var(--radius-md);
             overflow: hidden;
-            background-color: var(--surface);
-            border: 1px solid var(--surface-border);
+            background-color: var(--bg-color);
             position: relative;
+        }
+
+        .photo-item.large {
+            grid-column: span 2;
+            aspect-ratio: 16 / 10;
         }
 
         .photo-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .photo-item:active img {
             transform: scale(1.05);
         }
 
-        /* Bottom Navigation */
+        /* --- GAME UI --- */
+        .game-container {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-xl);
+            padding: 40px 20px;
+            text-align: center;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .tires-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.08;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            pointer-events: none;
+        }
+
+        .tire {
+            width: 140px;
+            height: 140px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/3085/3085330.png'); 
+            background-size: cover;
+            border-radius: 50%;
+            animation: spin 4s linear infinite;
+        }
+
+        .tire.reverse {
+            animation: spin 5s linear infinite reverse;
+            width: 180px;
+            height: 180px;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .game-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .game-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .game-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .game-btn {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 12px 32px var(--accent-glow), inset 0 4px 12px rgba(255,255,255,0.3);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .game-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 4px 16px var(--accent-glow), inset 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .game-btn.waiting { 
+            background: var(--danger); 
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            animation: pulse-danger 1.5s infinite;
+            font-size: 22px;
+        }
+
+        .game-btn.now { 
+            background: var(--success); 
+            box-shadow: 0 12px 40px var(--success-glow); 
+            font-size: 36px; 
+        }
+
+        @keyframes pulse-danger {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .game-result {
+            margin-top: 32px;
+            font-size: 18px;
+            font-weight: 700;
+            height: 28px;
+            color: var(--warning);
+            transition: opacity 0.3s;
+        }
+
+        /* --- BOTTOM NAVIGATION --- */
         .bottom-nav {
             position: fixed;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
             max-width: 440px;
-            height: 64px;
+            height: 72px;
             background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--surface-border);
-            border-radius: 32px;
+            border-radius: var(--radius-xl);
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 0 10px;
+            padding: 0 8px;
             z-index: 100;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            gap: 6px;
             color: var(--text-secondary);
             text-decoration: none;
-            width: 60px;
-            transition: color 0.2s ease;
+            width: 72px;
+            height: 100%;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 20px;
         }
 
-        .nav-item.active {
-            color: var(--accent);
+        .nav-item.active { 
+            color: var(--accent); 
         }
 
         .nav-item svg {
@@ -261,26 +426,30 @@
             height: 24px;
             fill: none;
             stroke: currentColor;
-            stroke-width: 2;
+            stroke-width: 2.5;
             stroke-linecap: round;
             stroke-linejoin: round;
+            transition: transform 0.3s;
         }
 
-        .nav-label {
-            font-size: 10px;
-            font-weight: 500;
+        .nav-item.active svg {
+            transform: translateY(-2px);
+            filter: drop-shadow(0 4px 8px var(--accent-glow));
+        }
+
+        .nav-label { 
+            font-size: 11px; 
+            font-weight: 600; 
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<main class="app-container">
     
     <header class="header">
         <div class="profile-group">
-            <div class="avatar">
-                <div class="avatar-inner"></div>
-            </div>
+            <div class="avatar"><div class="avatar-inner"></div></div>
             <div class="user-info">
                 <h1>Тато 🇺🇦</h1>
                 <div class="status-badge">
@@ -291,59 +460,160 @@
         </div>
     </header>
 
-    <div class="bento-grid">
-        <div class="bento-card span-2 message-card">
-            <h2>З Днем Народження, тато! ✊</h2>
-            <p>Дякую за правильне виховання і за те, що ти зараз там. Бажаю здоров'я, удачі та надійних побратимів поруч. Міцно тисну руку!</p>
+    <section id="tab-home" class="tab-content active">
+        <div class="bento-grid">
+            <article class="bento-card span-2 message-card">
+                <h2>З Днем Народження, тато! ✊</h2>
+                <p>Дякую за правильне виховання і за те, що ти зараз там. Бажаю сталевого здоров'я, удачі та надійних побратимів поруч. Чекаю вдома з перемогою, міцно тисну руку!</p>
+            </article>
+            
+            <article class="bento-card location-card span-2">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <h3>~850</h3>
+                <p>КМ МІЖ НАМИ. ЧЕКАЮ ВДОМА.</p>
+            </article>
         </div>
+    </section>
 
-        <div class="bento-card location-card span-2">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            <h3>~850</h3>
-            <p>КМ МІЖ НАМИ. ЧЕКАЮ ВДОМА.</p>
-        </div>
-    </div>
-
-    <div>
-        <h2 class="section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            Сімейний архів
-        </h2>
+    <section id="tab-gallery" class="tab-content">
         <div class="gallery-grid">
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee92ba992dc880feb79_photo_10_2026-03-29_14-45-16.jpg" alt="Фото 1" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee961fdbe20f4fa28fb_photo_6_2026-03-29_14-45-16.jpg" alt="Фото 2" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee936307adb18ab5fc3_photo_8_2026-03-29_14-45-16.jpg" alt="Фото 3" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee961095c0a695bee89_photo_11_2026-03-29_14-45-16.jpg" alt="Фото 4" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee95eaf20274bd48b32_photo_12_2026-03-29_14-45-16.jpg" alt="Фото 5" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee96b7d429cec005bc3_photo_9_2026-03-29_14-45-16.jpg" alt="Фото 6" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee92a05dc29af0bf28b_photo_7_2026-03-29_14-45-16.jpg" alt="Фото 7" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee9d74fcba9ca349f3c_photo_3_2026-03-29_14-45-16.jpg" alt="Фото 8" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee99e153079027f7327_photo_4_2026-03-29_14-45-16.jpg" alt="Фото 9" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee95c8b247e6d3f815b_photo_5_2026-03-29_14-45-16.jpg" alt="Фото 10" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee9e0d35b43ee7cb857_photo_2_2026-03-29_14-45-16.jpg" alt="Фото 11" loading="lazy"></div>
-            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee84772944714ecb09e_photo_13_2026-03-29_14-45-16.jpg" alt="Фото 12" loading="lazy"></div>
+            <div class="photo-item large"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee92ba992dc880feb79_photo_10_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
+            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee961fdbe20f4fa28fb_photo_6_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
+            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee936307adb18ab5fc3_photo_8_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
+            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee961095c0a695bee89_photo_11_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
+            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee95eaf20274bd48b32_photo_12_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
+            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee96b7d429cec005bc3_photo_9_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
+            <div class="photo-item"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee92a05dc29af0bf28b_photo_7_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
+            <div class="photo-item large"><img src="https://cdn.prod.website-files.com/69773db6dd3ba39f3b98293f/69c91ee84772944714ecb09e_photo_13_2026-03-29_14-45-16.jpg" alt="Фото" loading="lazy"></div>
         </div>
-    </div>
+    </section>
+
+    <section id="tab-game" class="tab-content">
+        <div class="game-container">
+            <div class="tires-bg">
+                <div class="tire"></div>
+                <div class="tire reverse"></div>
+            </div>
+            
+            <div class="game-content">
+                <h2 class="game-title">Перевірка реакції</h2>
+                <p class="game-desc">Натисни, коли кнопка стане зеленою</p>
+                
+                <button id="reaction-btn" class="game-btn">СТАРТ</button>
+                <div id="reaction-result" class="game-result"></div>
+            </div>
+        </div>
+    </section>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active">
+        <a href="#tab-home" class="nav-item active" data-target="tab-home">
             <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             <span class="nav-label">Головна</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="#tab-gallery" class="nav-item" data-target="tab-gallery">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            <span class="nav-label">Галерея</span>
+            <span class="nav-label">Архів</span>
         </a>
-        <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            <span class="nav-label">Побажання</span>
+        <a href="#tab-game" class="nav-item" data-target="tab-game">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg>
+            <span class="nav-label">Гараж</span>
         </a>
     </nav>
+</main>
 
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. Плавне перемикання вкладок ---
+        const navItems = document.querySelectorAll('.nav-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const targetId = item.getAttribute('data-target');
+                const currentActive = document.querySelector('.tab-content.active');
+                const targetTab = document.getElementById(targetId);
+
+                if (currentActive === targetTab) return;
+
+                // Оновлюємо UI навігації
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                // Логіка зміни вкладок без стрибків контенту
+                currentActive.style.opacity = '0';
+                currentActive.style.transform = 'translateY(15px)';
+                
+                setTimeout(() => {
+                    currentActive.classList.remove('active');
+                    targetTab.classList.add('active');
+                    
+                    // Невелика затримка для запуску CSS-анімації появи
+                    setTimeout(() => {
+                        targetTab.style.opacity = '1';
+                        targetTab.style.transform = 'translateY(0)';
+                    }, 50);
+                }, 300); // Час має співпадати з CSS transition
+            });
+        });
+
+        // --- 2. Логіка гри "Перевірка реакції" ---
+        const btn = document.getElementById('reaction-btn');
+        const resultText = document.getElementById('reaction-result');
+        
+        let state = 'idle'; 
+        let startTime;
+        let timeoutId;
+
+        // Використовуємо pointerdown для швидшої реакції на мобільних (замість click)
+        btn.addEventListener('pointerdown', (e) => {
+            e.preventDefault(); // Запобігає подвійному кліку/зуму
+            
+            if (state === 'idle') {
+                state = 'waiting';
+                btn.className = 'game-btn waiting';
+                btn.textContent = 'ЧЕКАЙ...';
+                resultText.style.opacity = '0';
+                
+                const randomDelay = Math.floor(Math.random() * 2500) + 1500; // 1.5 - 4 сек
+                
+                timeoutId = setTimeout(() => {
+                    state = 'ready';
+                    btn.className = 'game-btn now';
+                    btn.textContent = 'ТИСНИ!';
+                    startTime = Date.now();
+                }, randomDelay);
+                
+            } else if (state === 'waiting') {
+                clearTimeout(timeoutId);
+                state = 'idle';
+                btn.className = 'game-btn';
+                btn.textContent = 'СТАРТ';
+                
+                resultText.textContent = 'Зарано! Фальстарт 😅';
+                resultText.style.opacity = '1';
+                
+            } else if (state === 'ready') {
+                const reactionTime = Date.now() - startTime;
+                state = 'idle';
+                btn.className = 'game-btn';
+                btn.textContent = 'ЩЕ РАЗ';
+                
+                let feedback = '';
+                if(reactionTime < 250) feedback = '🔥 Рівень: Кіберспортсмен!';
+                else if(reactionTime < 400) feedback = '⚡ Непогано, батя!';
+                else feedback = '🐢 Треба швидше!';
+                
+                resultText.textContent = `Твій час: ${reactionTime} мс. ${feedback}`;
+                resultText.style.opacity = '1';
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
