@@ -2,172 +2,153 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>З Днем Народження, Тато!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>З Днем Народження!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-bg: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --accent: #0984e3;
-            --radius: 20px;
+            --bg-color: #0f172a;
+            --surface: rgba(30, 41, 59, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --nav-height: 80px;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--primary-bg);
-            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.1), transparent 25%);
         }
 
-        .mobile-container {
+        .app-container {
             width: 100%;
             max-width: 480px;
-            background-color: var(--primary-bg);
-            min-height: 100vh;
             position: relative;
-            padding-bottom: 40px;
+            padding: 24px 20px calc(var(--nav-height) + 24px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .hero {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
-            padding: 60px 20px 40px;
-            text-align: center;
-            color: white;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 20px rgba(9, 132, 227, 0.2);
+        /* Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
         }
 
-        .hero h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 700;
+        .profile-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .hero p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .photo-avatar {
-            width: 120px;
-            height: 120px;
+        .avatar {
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            border: 4px solid white;
-            margin: -60px auto 20px;
-            background-color: #dfe6e9;
-            background-image: url('https://via.placeholder.com/120'); /* Встав посилання на фото тата сюди */
+            background: linear-gradient(135deg, var(--accent), #2563eb);
+            padding: 2px;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=200&h=200'); /* Заміни на фото тата */
             background-size: cover;
             background-position: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid var(--bg-color);
         }
 
-        .content {
-            padding: 0 20px;
-            margin-top: 30px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .card h2 {
+        .user-info h1 {
             font-size: 20px;
-            margin-bottom: 12px;
-            color: var(--text-main);
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .card p {
-            font-size: 15px;
-            line-height: 1.6;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-        }
-
-        .card p:last-child {
-            margin-bottom: 0;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .gallery-item {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            border-radius: 12px;
-            background-color: #dfe6e9;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .button {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            text-align: center;
-            background-color: var(--accent);
-            color: white;
-            text-decoration: none;
-            border-radius: 14px;
-            font-size: 16px;
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
-            margin-top: 10px;
-            transition: opacity 0.2s ease;
+            margin-top: 4px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
-        .button:active {
-            opacity: 0.8;
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
         }
-    </style>
-</head>
-<body>
 
-<div class="mobile-container">
-    <div class="hero">
-        <h1>З Днем Народження!</h1>
-        <p>Найкращому татові</p>
-    </div>
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
 
-    <div class="photo-avatar"></div>
+        .bento-card {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease;
+        }
 
-    <div class="content">
-        <div class="card">
-            <h2>Привіт з Польщі! 👋</h2>
-            <p>Тату, вітаю тебе з днем народження! Дуже сильно сумую за тобою і чекаю нашої зустрічі.</p>
-            <p>Бережи себе там. Ти — мій герой і найбільший приклад для мене. Дякую тобі за все, що ти робиш.</p>
-        </div>
+        .bento-card:active {
+            transform: scale(0.98);
+        }
 
-        <div class="card">
-            <h2>Наші спогади</h2>
-            <div class="gallery">
-                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
-                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
-                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
-                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
-            </div>
-        </div>
-        
-        <a href="#" class="button">Дивитися відеопривітання</a>
-    </div>
-</div>
+        .span-2 {
+            grid-column: span 2;
+        }
 
-</body>
-</html>
+        /* Card: Main Message */
+        .message-card h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .message-card p {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
