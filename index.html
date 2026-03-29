@@ -1,64 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>З Днем Народження, Тато!</title>
+    <style>
+        :root {
+            --primary-bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --accent: #0984e3;
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--primary-bg);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            padding: 60px 20px 40px;
+            text-align: center;
+            color: white;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 20px rgba(9, 132, 227, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .photo-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin: -60px auto 20px;
+            background-color: #dfe6e9;
+            background-image: url('https://via.placeholder.com/120'); /* Встав посилання на фото тата сюди */
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .content {
+            padding: 0 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .card p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            background-color: #dfe6e9;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            text-align: center;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: opacity 0.2s ease;
+        }
+
+        .button:active {
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div id="logo-container">
-            <span id="logo" class="logo">Author</span>
-            <div id="author-info" class="hidden">
-                <img src="IMG_6739.jpg" style="width: 20%; height: 20%; margin-bottom: 1rem;">
-                <p>Name: Artem Chubei</p>
-                <p>Group: 211-B</p>
+
+<div class="mobile-container">
+    <div class="hero">
+        <h1>З Днем Народження!</h1>
+        <p>Найкращому татові</p>
+    </div>
+
+    <div class="photo-avatar"></div>
+
+    <div class="content">
+        <div class="card">
+            <h2>Привіт з Польщі! 👋</h2>
+            <p>Тату, вітаю тебе з днем народження! Дуже сильно сумую за тобою і чекаю нашої зустрічі.</p>
+            <p>Бережи себе там. Ти — мій герой і найбільший приклад для мене. Дякую тобі за все, що ти робиш.</p>
+        </div>
+
+        <div class="card">
+            <h2>Наші спогади</h2>
+            <div class="gallery">
+                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
+                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
+                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
+                <div class="gallery-item" style="background-image: url('https://via.placeholder.com/150');"></div>
             </div>
         </div>
-        <ul class="nav-links">
-            <li><button onclick="showtask(1)">Area Calculator</button></li>
-            <li><button onclick="showtask(2)">Money Writer</button></li>
-            <li><button onclick="showtask(3)">Text Editor</button></li>
-        </ul>
-    </nav>
-
-    <main id="tasks-container">
-        <section id="task1" class="task-block">
-            <h2>Area Calculator</h2>
-            <p>Choose a shape and enter its measurements to calculate its area:</p>
-            <select id="shape-select">
-                <option value="">Select a shape</option>
-                <option value="circle">Circle</option>
-                <option value="triangle">Triangle(base+height)</option>
-                <option value="rectangle">Rectangle</option>
-            </select>
-            <div id="shape-inputs">
-                <input type="number" id="value1" placeholder="Value 1">
-                <input type="number" id="value2" placeholder="Value 2">
-            </div>
-
-            <button id="calculate-btn">Calculate Area</button>
-            <div id="area-result"></div>
-        </section>
         
-        <section id="task2" class="task-block" style="display:none;">
-            <h2>Money Writer</h2>
-            <p>Enter amount to get correct spelling:</p>
-            <input type="number" id="money-input" placeholder="Enter amount">
-            <button id="convert-btn">Check Spelling</button>
-            <div id="money-result"></div>
-        </section>
-        <section id="task3" class="task-block" style="display:none;">
-            <h2>Text Editor</h2>
-            <p>Enter text, word for search and replace:</p>
-            <textarea id="text-input" placeholder="Enter text here" class="text"></textarea>
-            <input type="text" id="search-word" placeholder="Word to search">
-            <input type="text" id="replace-word" placeholder="Word to replace with">
-            <button id="replace-btn">Replace</button>
-            <div id="text-result" class="text-result"></div>
-        </section>
-    </main>
+        <a href="#" class="button">Дивитися відеопривітання</a>
+    </div>
+</div>
+
 </body>
-<script src="func.js" defer></script>
 </html>
